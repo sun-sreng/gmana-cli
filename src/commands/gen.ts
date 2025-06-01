@@ -1,11 +1,4 @@
-import {
-  confirm,
-  intro,
-  multiselect,
-  outro,
-  spinner,
-  text,
-} from "@clack/prompts";
+import { confirm, intro, multiselect, outro, spinner, text } from "@clack/prompts";
 import clipboardy from "clipboardy";
 import { bgBlue, bold, cyan, dim, green, red, white, yellow } from "colorette";
 import { Command } from "commander";
@@ -13,10 +6,8 @@ import consola from "consola";
 
 import { loadConfig } from "@/lib/config";
 import { saveToHistory } from "@/lib/history.js";
-import {
-  PasswordGenerator,
-  type PasswordOptions,
-} from "@/lib/password-generator.js";
+import { PasswordGenerator, type PasswordOptions } from "@/lib/password-generator.js";
+import type { CommandOptions } from "@/types/command-options";
 
 export const genCommand = new Command()
   .name("gen")
@@ -120,31 +111,28 @@ async function runInteractiveMode() {
   outro(green("✨ Done!"));
 }
 
-async function runCommandMode(options: any) {
+async function runCommandMode(options: CommandOptions) {
   const config = await loadConfig();
 
   const passwordOptions: PasswordOptions = {
-    length: parseInt(options.length) || config.defaultLength || 12,
+    length: parseInt(options.length || "") || config.defaultLength || 12,
     includeUppercase: options.uppercase !== false,
     includeLowercase: options.lowercase !== false,
     includeNumbers: options.numbers !== false,
     includeSymbols: options.symbols !== false,
-    includeExtraSymbols: options.extraSymbols || false,
-    excludeSimilar: options.excludeSimilar || false,
-    excludeAmbiguous: options.excludeAmbiguous || false,
+    includeExtraSymbols: options.extraSymbols ?? false,
+    excludeSimilar: options.excludeSimilar ?? false,
+    excludeAmbiguous: options.excludeAmbiguous ?? false,
   };
 
   await generateAndDisplay(passwordOptions, {
-    copy: options.copy,
-    save: options.save,
-    showStrength: options.showStrength,
+    copy: options.copy ?? false,
+    save: options.save ?? false,
+    showStrength: options.showStrength ?? false,
   });
 }
 
-async function generateAndDisplay(
-  options: PasswordOptions,
-  actions: { copy: boolean; save: boolean; showStrength: boolean },
-) {
+async function generateAndDisplay(options: PasswordOptions, actions: { copy: boolean; save: boolean; showStrength: boolean }) {
   const s = spinner();
   s.start("Generating secure password...");
 
@@ -160,12 +148,9 @@ async function generateAndDisplay(
   // Show strength analysis
   if (actions.showStrength) {
     const strength = PasswordGenerator.calculateStrength(password);
-    const strengthColor =
-      strength.score >= 75 ? green : strength.score >= 50 ? yellow : red;
+    const strengthColor = strength.score >= 75 ? green : strength.score >= 50 ? yellow : red;
 
-    console.log(
-      `\n${bold("Strength:")} ${strengthColor(strength.level)} (${strength.score}/100)`,
-    );
+    console.log(`\n${bold("Strength:")} ${strengthColor(strength.level)} (${strength.score}/100)`);
 
     if (strength.feedback.length > 0) {
       console.log(dim("Suggestions: " + strength.feedback.join(", ")));
@@ -177,7 +162,7 @@ async function generateAndDisplay(
     try {
       await clipboardy.write(password);
       consola.success("📋 Copied to clipboard!");
-    } catch (error) {
+    } catch {
       consola.warn("Failed to copy to clipboard");
     }
   }
@@ -187,7 +172,7 @@ async function generateAndDisplay(
     try {
       await saveToHistory(password, options);
       consola.success("💾 Saved to history!");
-    } catch (error) {
+    } catch {
       consola.warn("Failed to save to history");
     }
   }

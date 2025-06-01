@@ -25,7 +25,7 @@ export async function loadConfig(): Promise<Config> {
       const rawConfig = await fs.readJson(CONFIG_FILE);
       return ConfigSchema.parse(rawConfig);
     }
-  } catch (error) {
+  } catch {
     // Fall back to defaults if config is invalid
   }
 

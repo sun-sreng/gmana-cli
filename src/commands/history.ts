@@ -40,14 +40,8 @@ async function listHistory(limit: number = 10) {
     return;
   }
 
-  console.log(
-    cyan(
-      `\n📚 Password History (${Math.min(limit, history.length)} of ${history.length}):`,
-    ),
-  );
-  console.log(
-    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-  );
+  console.log(cyan(`\n📚 Password History (${Math.min(limit, history.length)} of ${history.length}):`));
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
   const entries = history.slice(0, limit);
 
@@ -61,9 +55,7 @@ async function listHistory(limit: number = 10) {
     console.log(`   Settings: ${dim(options)}`);
   });
 
-  console.log(
-    "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n",
-  );
+  console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
 
 async function clearHistoryCommand() {
@@ -115,7 +107,7 @@ async function interactiveHistory() {
 }
 
 async function copyFromHistory(history: HistoryEntry[]) {
-  const options = history.slice(0, 10).map((entry, index) => {
+  const options = history.slice(0, 10).map((entry) => {
     const date = new Date(entry.createdAt).toLocaleDateString();
     const maskedPassword = maskPassword(entry.password);
     const settings = formatOptions(entry.options);
@@ -138,7 +130,7 @@ async function copyFromHistory(history: HistoryEntry[]) {
     try {
       await clipboardy.write(selectedEntry.password);
       consola.success("📋 Password copied to clipboard!");
-    } catch (error) {
+    } catch {
       consola.error("Failed to copy password to clipboard");
     }
   }

@@ -80,26 +80,34 @@ async function resetConfig() {
 }
 
 async function setConfigValue(keyValue: string) {
-  const [key, value] = keyValue.split("=");
+  const [rawKey, rawValue] = keyValue.split("=");
+  const key = rawKey?.trim().toLowerCase();
+  const value = rawValue?.trim();
 
   if (!key || value === undefined) {
-    consola.error("Invalid format. Use: --set key=value");
+    consola.error("❌ Invalid format. Use: --set key=value");
     return;
   }
 
-  // const config = await loadConfig();
   const updates: Partial<Config> = {};
 
-  switch (key.toLowerCase()) {
+  const parseAndValidateNumber = (val: string, min: number, max: number, errorMsg: string): number | null => {
+    const num = parseInt(val, 10);
+    if (isNaN(num) || num < min || num > max) {
+      consola.error(`❌ ${errorMsg}`);
+      return null;
+    }
+    return num;
+  };
+
+  switch (key) {
     case "defaultlength":
-    case "length":
-      const length = parseInt(value);
-      if (isNaN(length) || length < 4 || length > 128) {
-        consola.error("Length must be between 4 and 128");
-        return;
-      }
+    case "length": {
+      const length = parseAndValidateNumber(value, 4, 128, "Length must be between 4 and 128");
+      if (length === null) return;
       updates.defaultLength = length;
       break;
+    }
 
     case "autocopy":
       updates.autoCopy = value.toLowerCase() === "true";
@@ -109,17 +117,15 @@ async function setConfigValue(keyValue: string) {
       updates.saveHistory = value.toLowerCase() === "true";
       break;
 
-    case "historylimit":
-      const limit = parseInt(value);
-      if (isNaN(limit) || limit < 0 || limit > 1000) {
-        consola.error("History limit must be between 0 and 1000");
-        return;
-      }
+    case "historylimit": {
+      const limit = parseAndValidateNumber(value, 0, 1000, "History limit must be between 0 and 1000");
+      if (limit === null) return;
       updates.historyLimit = limit;
       break;
+    }
 
     default:
-      consola.error(`Unknown configuration key: ${key}`);
+      consola.error(`❌ Unknown configuration key: ${key}`);
       return;
   }
 

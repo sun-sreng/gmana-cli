@@ -29,10 +29,7 @@ export class PasswordGenerator {
     const validatedOptions = PasswordOptionsSchema.parse(options);
 
     if (validatedOptions.customChars) {
-      return this.generateFromCustomChars(
-        validatedOptions.customChars,
-        validatedOptions.length,
-      );
+      return this.generateFromCustomChars(validatedOptions.customChars, validatedOptions.length);
     }
 
     const charset = this.buildCharset(validatedOptions);
@@ -70,10 +67,7 @@ export class PasswordGenerator {
     return charset;
   }
 
-  private static generateSecurePassword(
-    charset: string,
-    length: number,
-  ): string {
+  private static generateSecurePassword(charset: string, length: number): string {
     const password = new Array(length);
     const charsetLength = charset.length;
 
@@ -85,10 +79,7 @@ export class PasswordGenerator {
     return password.join("");
   }
 
-  private static generateFromCustomChars(
-    customChars: string,
-    length: number,
-  ): string {
+  private static generateFromCustomChars(customChars: string, length: number): string {
     return this.generateSecurePassword(customChars, length);
   }
 
@@ -116,7 +107,7 @@ export class PasswordGenerator {
     if (/\d/.test(password)) score += 15;
     else feedback.push("Add numbers");
 
-    if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score += 20;
+    if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(password)) score += 20;
     else feedback.push("Add special characters");
 
     // Pattern penalties
@@ -130,18 +121,7 @@ export class PasswordGenerator {
       feedback.push("Avoid common sequences");
     }
 
-    const level =
-      score >= 90
-        ? "Very Strong"
-        : score >= 75
-          ? "Strong"
-          : score >= 60
-            ? "Good"
-            : score >= 40
-              ? "Fair"
-              : score >= 20
-                ? "Weak"
-                : "Very Weak";
+    const level = score >= 90 ? "Very Strong" : score >= 75 ? "Strong" : score >= 60 ? "Good" : score >= 40 ? "Fair" : score >= 20 ? "Weak" : "Very Weak";
 
     return { score: Math.max(0, score), level, feedback };
   }

@@ -25,10 +25,7 @@ export type HistoryEntry = z.infer<typeof HistoryEntrySchema>;
 const CONFIG_DIR = path.join(os.homedir(), ".gmana");
 const HISTORY_FILE = path.join(CONFIG_DIR, "history.json");
 
-export async function saveToHistory(
-  password: string,
-  options: PasswordOptions,
-): Promise<void> {
+export async function saveToHistory(password: string, options: PasswordOptions): Promise<void> {
   await fs.ensureDir(CONFIG_DIR);
 
   const history = await loadHistory();
@@ -60,7 +57,7 @@ export async function loadHistory(): Promise<HistoryEntry[]> {
       const rawHistory = await fs.readJson(HISTORY_FILE);
       return HistorySchema.parse(rawHistory);
     }
-  } catch (error) {
+  } catch {
     // Return empty array if history file is invalid
   }
 
