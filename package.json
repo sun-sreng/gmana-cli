@@ -4,10 +4,23 @@
   "description": "A sleek, interactive, and secure CLI tool for generating and managing passwords with modern UX, strong encryption, and smart features.",
   "keywords": [
     "cli",
-    "password",
-    "generator",
-    "security"
+    "password-generator",
+    "secure-password",
+    "interactive-cli",
+    "typescript",
+    "encryption",
+    "security",
+    "password-manager",
+    "gmana"
   ],
+  "homepage": "https://github.com/sun-sreng/gmana-cli#readme",
+  "bugs": {
+    "url": "https://github.com/sun-sreng/gmana-cli/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sun-sreng/gmana-cli.git"
+  },
   "license": "MIT",
   "author": {
     "name": "Sun Sreng",
@@ -17,15 +30,21 @@
   "bin": {
     "gmana": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf ./dist/ ./node_modules/ ./bun.lock ./package-lock.json",
+    "clean": "rimraf dist node_modules bun.lock package-lock.json",
     "dev": "tsup --watch",
     "format": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm version patch && npm run build",
+    "pub": "npm publish --access public",
     "start": "node dist/index.js",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -44,17 +63,25 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@eslint/css": "^0.8.1",
+    "@eslint/js": "^9.28.0",
+    "@eslint/json": "^0.12.0",
+    "@eslint/markdown": "^6.4.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
-    "eslint": "^8.56.0",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0",
     "prettier": "^3.1.1",
+    "rimraf": "^6.0.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
-    "vitest": "^1.1.0"
+    "typescript-eslint": "^8.33.0",
+    "vitest": "^3.1.4"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "preferGlobal": true
 }

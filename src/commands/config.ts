@@ -87,7 +87,7 @@ async function setConfigValue(keyValue: string) {
     return;
   }
 
-  const config = await loadConfig();
+  // const config = await loadConfig();
   const updates: Partial<Config> = {};
 
   switch (key.toLowerCase()) {

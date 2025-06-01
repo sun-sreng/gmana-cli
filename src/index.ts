@@ -1,10 +1,10 @@
 import { Command } from "commander";
 import consola from "consola";
+
+import { genCommand } from "@/commands/gen.js";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
-import { genCommand } from "@/commands/gen.js";
 import pkg from "../package.json";
 import { configCommand } from "./commands/config";
 import { historyCommand } from "./commands/history";
@@ -19,10 +19,7 @@ async function main() {
     .version(pkg.version, "-v, --version", "display version number")
     .helpOption("-h, --help", "display help for command");
 
-  program
-    .addCommand(genCommand)
-    .addCommand(configCommand)
-    .addCommand(historyCommand);
+  program.addCommand(genCommand).addCommand(configCommand).addCommand(historyCommand);
 
   // Global error handling
   program.exitOverride();
@@ -30,15 +27,13 @@ async function main() {
   try {
     await program.parseAsync();
   } catch (error) {
-    if (error instanceof Error && error.name !== "CommanderError") {
-      consola.error("Unexpected error:", error.message);
-      process.exit(1);
+    if (error instanceof Error && error.name === "CommanderError") {
+      process.exit(0);
     }
-    throw error;
+
+    consola.error("Unexpected error:", error instanceof Error ? error.message : error);
+    process.exit(1);
   }
 }
 
-main().catch((error) => {
-  consola.error("Fatal error:", error);
-  process.exit(1);
-});
+main();
