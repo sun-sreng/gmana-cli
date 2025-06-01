@@ -1,0 +1,60 @@
+{
+  "name": "gmana",
+  "version": "1.0.0",
+  "description": "A sleek, interactive, and secure CLI tool for generating and managing passwords with modern UX, strong encryption, and smart features.",
+  "keywords": [
+    "cli",
+    "password",
+    "generator",
+    "security"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Sun Sreng",
+    "email": "sun.sreng123@gmail.com"
+  },
+  "type": "module",
+  "bin": {
+    "gmana": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf ./dist/ ./node_modules/ ./bun.lock ./package-lock.json",
+    "dev": "tsup --watch",
+    "format": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "clipboardy": "^4.0.0",
+    "colorette": "^2.0.20",
+    "commander": "^11.1.0",
+    "consola": "^3.2.3",
+    "execa": "^8.0.1",
+    "fs-extra": "^11.2.0",
+    "ora": "^8.0.1",
+    "picocolors": "^1.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
